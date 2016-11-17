@@ -1,0 +1,23 @@
+#--------------------------------------------------------
+#accepts a protein sequence and counts the number of residues in it
+##here raw_data pick up the first line stores it in seq
+##if there are multilie user input and you put just the line below it will
+##skip the first line
+seq = raw_input("Enter the sequence: ")
+## allows multiline user input
+## This ipiece here captures the 2nd line onwards and joins until user
+##enters a new line and stores it in seq1
+sentinel = ''
+seq1 = ''.join(iter(raw_input, sentinel))
+##combines seq and seq1
+seq = seq + seq1
+#removes whitespace from it and creates a list
+seq = list(seq.replace(' ', ''))
+#remove digits form the list
+seq = [x for x in seq if not (x.isdigit()
+                            or x[0] == '-' and x[1:].isdigit())]
+print seq
+print len(seq)
+
+# print len(seq)
+# print seq.count("y")

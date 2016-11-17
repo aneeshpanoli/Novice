@@ -1,0 +1,37 @@
+# A calculator to do simple arithmatic between 2 numbers
+# Aneesh Panoli 11/14/2016
+# Asks user to input first number
+num1 = raw_input("Enter the first number:")
+# Converts to float
+num1 = float(num1)
+# Prompt for operator
+ops = raw_input("Enter +, -, /, or * :")
+# Prompt for second  number
+num2 = raw_input("Enter the second number:")
+# Converts to float
+num2 = float(num2)
+
+
+# Checks the operation user typed in and executes the corresponding command
+if ops == "+":
+    result = num1 + num2
+elif ops == "-":
+    result = num1 - num2
+elif ops == "/":
+    result = num1 / num2
+elif ops == "*":
+    result = num1 * num2
+else:
+    result = "Invalid entry, please enter +, -, *, or /"
+
+# Transforms result from integer to string and stores as result1(str for print)
+result1 = str(result)
+print "The result is " + result1
+
+# cheks if the result is an odd or even number or a fraction
+if result % 2 == 0 and result > 1:
+    print result1 + " is an even number"
+elif result % 2 != 0 and result > 1:
+    print result1 + " is an odd number"
+else:
+    print result1 + " is neither odd nor even it's a fraction"

@@ -1,0 +1,60 @@
+#cleaned up version of random_letter_word
+#---by---topanoli@gmail.com
+
+#generates words from random letters for scrabble
+######---topanoli@gmail.com-----Scrabble helper------
+
+#imp:1------------------------------------------------------------
+from PyDictionary import PyDictionary
+dictionary = PyDictionary()
+#imp:2---------------------------------------------------
+from itertools import permutations
+#mod:1-----------------------------------------------------------------
+#gets called by mod:2 when user enters more than one character
+# prompts for 8 letters
+def one_chr(string):
+    while True:
+        len(string) < 1 or string == '' or string == ' ' or len(string) > 8
+        if len(string) < 1 or string == '' or string == ' ' or len(string) > 8:
+            string = raw_input("Try again, enter upto 8 random letters: ")
+            continue
+        else:
+            return string
+            break
+
+#mod:2-------------------------------------------------------------------
+#ask user for random letters prints a list
+word = raw_input("Enter upto 8 random letters: ")
+word = one_chr(word)
+word_l = list(word)
+
+#mod:3---------------------------------------------------------------
+#generates all possible permutaitons for the elements in the list
+#for permutation in itertools.permutations(word_l):
+word_permus = list(permutations(word_l))
+#generates lists of all possible words
+words = ""
+for i in word_permus:
+    words = ''.join(i) + " " + words
+ready_word = words.split(" ")
+del ready_word[-1]
+
+#mod4------------------------------------------------
+#Compares generated words against  a list of standard dictionary words
+with open("dic_words.txt")as dic_words:
+    dic_data = dic_words.read()
+
+dic_data = dic_data.split('\n')
+words_found = list(set(dic_data).intersection(ready_word))
+words_output = ', ' .join(words_found)
+
+#mod5:----------------------------------------------------------------
+#Outputs possible words
+if words_output != " ":
+    print "Possible words are: "+ words_output
+else:
+    print "No words found!"
+
+
+# for w in words_found:
+#     print (dictionary.meaning(w))

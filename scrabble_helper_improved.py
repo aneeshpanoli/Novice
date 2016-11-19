@@ -58,6 +58,8 @@ elif len(word_all) == 8:
         list(permutations(word_all, 3)) + list(permutations(word_all, 4)) \
         + list(permutations(word_all, 5)) + list(permutations(word_all, 6)) \
         + list(permutations(word_all, 7)) + list(permutations(word_all, 8))
+else:
+    print "Not enough letters!"
 
 ## here words creates an empty string to collect the data from for loop
 ##this is such a neat trick

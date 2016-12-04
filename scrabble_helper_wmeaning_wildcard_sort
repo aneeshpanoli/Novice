@@ -1,0 +1,136 @@
+######---topanoli@gmail.com-----Scrabble helper------with an
+#option to find meaning..see random_letter_word for evolution
+
+#imp:1------------------------------------------------------------
+from PyDictionary import PyDictionary
+dictionary = PyDictionary()
+
+#imp:2---------------------------------------------------
+import itertools
+from itertools import permutations
+
+#func:1-----------------------------------------------------------------
+#gets called by mod:2 when user enters more than one character
+# prompts for a letter
+def one_chr(string):
+    while True:
+        len(string) <= 1 or string == '' or string == ' ' or len(string) > 8
+        if len(string) <= 1 or string == '' or string == ' ' or len(string) > 8:
+            string = raw_input("Try again, enter upto 8 random letters: ")
+##continue asks the while loop to go on
+            continue
+        else:
+            return string
+##break stops the while loop
+            break
+
+#func:2 meaning-----------------------------------------------------------------
+#Figures meaning from pydict. statement loops without sys.exit
+def meaning():
+    word = raw_input("Enter the word: ")
+    meaning = dictionary.meaning(word)
+    print meaning
+    sys.exit()
+
+#func:3------------------------------------------------
+#generates permutation combintaions based on the word length
+def permus():
+    if len(word_all) == 2:
+        word_permus = list(permutations(word_all, 2))
+    elif len(word_all) == 3:
+        word_permus = list(permutations(word_all, 2)) + \
+                                list(permutations(word_all, 3))
+    elif len(word_all) == 4:
+        word_permus = list(permutations(word_all, 2)) + \
+            list(permutations(word_all, 3)) + list(permutations(word_all, 4))
+    elif len(word_all) == 5:
+        word_permus = list(permutations(word_all, 2)) + \
+            list(permutations(word_all, 3)) + list(permutations(word_all, 4)) \
+            + list(permutations(word_all, 5))
+    elif len(word_all) == 6:
+        word_permus = list(permutations(word_all, 2)) + \
+            list(permutations(word_all, 3)) + list(permutations(word_all, 4)) \
+            + list(permutations(word_all, 5)) + list(permutations(word_all, 6))
+    elif len(word_all) == 7:
+        word_permus = list(permutations(word_all, 2)) + \
+            list(permutations(word_all, 3)) + list(permutations(word_all, 4)) \
+            + list(permutations(word_all, 5)) + list(permutations(word_all, 6)) \
+            + list(permutations(word_all, 7))
+    elif len(word_all) == 8:
+        word_permus = list(permutations(word_all, 2)) + \
+            list(permutations(word_all, 3)) + list(permutations(word_all, 4)) \
+            + list(permutations(word_all, 5)) + list(permutations(word_all, 6)) \
+            + list(permutations(word_all, 7)) + list(permutations(word_all, 8))
+    else:
+        None
+    return word_permus
+
+#funct 4------------------
+def realwords():
+#Joins letters and create actual words and collects in word = ""
+    words = ""
+    for i in permus():
+        words = ''.join(i) + " " + words
+    ready_word = words.split(" ")
+    del ready_word[-1]
+    #Check in deictionary word list for possible matches
+    with open("dic_words.txt")as dic_words:
+        dic_data = dic_words.read()
+    dic_data = dic_data.split('\n')
+    words_found = list(set(dic_data).intersection(ready_word))
+    words_output = ', ' .join(words_found)
+    words_output = words_output.upper()
+    return words_found
+#==============================================================================
+#==============================================================================
+
+#>>>>>>>>>MAIN-----------------
+#calls meaning or word search based on user input
+selection = raw_input("Enter  1 for meaning or 2 for words: ")
+selection = int(selection)
+words_found = [] # adds to this list if words are found
+if selection == 2: # do word search if user opts 2
+    word = raw_input("Enter upto 8 random letters (use 0 if 8th is wildcard): ")
+    word = one_chr(word)
+    word_all = list(word)
+
+    #-helps hwen wiildcard chrs comes up-----------------
+    if '0' in word_all:
+        albet = [chr(i) for i in range(ord('a'),ord('z')+1)]
+        for i in albet:
+            word_all.pop()
+            word_all = word_all + [i]
+            permus()
+            realword1 = realwords()
+            if realword1 != []:
+                words_found = words_found + realword1
+            else:
+                None
+    else:
+        word_all = list(word)
+        permus()
+        realword1 = realwords()
+        if realword1 != []:
+            words_found = words_found + realword1
+        else:
+            None
+elif selection == 1:
+    meaning()
+else:
+    selection = raw_input("Enter  1 for meaning or 2 for words: ")
+words_found = set(words_found)
+words_found = list(words_found)
+words_found.sort(key = lambda s: len(s))
+words_found = words_found[::-1]
+
+#>>>>>>mod 1 -prints the possible words.. checks if empty or not-----------------
+if words_found == []:
+    print "No words found!"
+else:
+    i = 0
+    for x in words_found:
+        i += 1
+        print "\t %d) %s" %(i, x)
+
+
+#================================end of code===================================

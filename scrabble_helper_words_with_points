@@ -1,0 +1,145 @@
+######---topanoli@gmail.com-----Scrabble helper------
+# will generate all the possible words from 2-8 random letters.
+# should have a copy of text with all dictionary words to look up
+
+# imp:1 imports itertolls to generate permutations-----------------------------
+import itertools
+from itertools import permutations
+
+# func:1-----------------------------------------------------------------
+# gets called by mod:1 when user enters more than one character
+# -- prompts for more than one letter
+def one_chr(string):
+    while True:
+        len(string) <= 1 or string == '' or string == ' ' or len(string) > 8
+        if len(string) <= 1 or string == '' or string == ' ' or len(string) > 8:
+            string = raw_input("Try again, enter upto 8 random letters: ")
+# continue asks the while loop to go on
+            continue
+        else:
+            return string
+# break stops the while loop
+            break
+
+# func:2------------------------------------------------
+# generates permutation combintaions based on the word length
+def permus():
+    if len(word_all) == 2:
+        word_permus = list(permutations(word_all, 2))
+    elif len(word_all) == 3:
+        word_permus = list(permutations(word_all, 2)) + \
+                                list(permutations(word_all, 3))
+    elif len(word_all) == 4:
+        word_permus = list(permutations(word_all, 2)) + \
+            list(permutations(word_all, 3)) + list(permutations(word_all, 4))
+    elif len(word_all) == 5:
+        word_permus = list(permutations(word_all, 2)) + \
+            list(permutations(word_all, 3)) + list(permutations(word_all, 4)) \
+            + list(permutations(word_all, 5))
+    elif len(word_all) == 6:
+        word_permus = list(permutations(word_all, 2)) + \
+            list(permutations(word_all, 3)) + list(permutations(word_all, 4)) \
+            + list(permutations(word_all, 5)) + list(permutations(word_all, 6))
+    elif len(word_all) == 7:
+        word_permus = list(permutations(word_all, 2)) + \
+            list(permutations(word_all, 3)) + list(permutations(word_all, 4)) \
+            + list(permutations(word_all, 5)) + list(permutations(word_all, 6)) \
+            + list(permutations(word_all, 7))
+    elif len(word_all) == 8:
+        word_permus = list(permutations(word_all, 2)) + \
+            list(permutations(word_all, 3)) + list(permutations(word_all, 4)) \
+            + list(permutations(word_all, 5)) + list(permutations(word_all, 6)) \
+            + list(permutations(word_all, 7)) + list(permutations(word_all, 8))
+    else:
+        None
+    return word_permus
+
+# funct 3------------------make real words by joining permutations
+def ready_word():
+    words = ""
+    for i in permus():
+        words = ''.join(i) + " " + words
+    ready_word = words.split(" ")
+    del ready_word[-1]
+    return ready_word
+
+# funct 4------match up words to dictionary
+def realwords():
+    # Check the deictionary word list for possible matches
+    with open("dic_words.txt")as dic_words:
+        dic_data = dic_words.read()
+    dic_data = dic_data.split('\n')
+    words_found = list(set(dic_data).intersection(ready_word1))
+    words_output = ', ' .join(words_found)
+    words_output = words_output.upper()
+    return words_found
+
+# funct 5--calculates word point---
+def point_cal():
+    values = {'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4,
+    'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10,
+    'r': 1, 's':1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10}
+    list1 = ready_word1
+    point_list = []
+    leng = len(list1)
+    for i in range(0, leng):
+        j = 0
+        for y in list1[i]:
+            if y in values:
+                j = j + values[y]
+            else:
+                None
+
+        point_list = point_list + [j]
+    return point_list
+
+# func 4------------------------------program output
+def output(words_found, point_list):
+    words_point = dict(zip(ready_word1, point_list))
+    words_found = set(words_found)
+    words_found = list(words_found)
+    words_found.sort(key = lambda s: len(s))
+    words_found = words_found[::-1]
+    if words_found == []: #if words_found is not an empty list
+        print "No words found!"
+    else:
+        i = 0 # set index to 0
+        for x in words_found: # go through each item in the list and print it
+            i += 1 # increment index
+            print "\t %d) %s  \t%d" %(i, x, words_point[x])
+
+#=============================================================================
+# Main: 1-----------------
+while True: #loops the program until exits
+    words_found = [] # adds to this list if words are found
+    word = raw_input("Enter upto 8 random letters (\
+use 0 if 8th is wildcard): ")
+    word = one_chr(word)
+    word_all = list(word)
+#-helps hwen wiildcard chrs comes up-----------------
+    if '0' in word_all:
+        albet = [chr(i) for i in range(ord('a'),ord('z')+1)]
+        for i in albet:
+            word_all.pop()
+            word_all = word_all + [i]
+            permus()
+            ready_word1 = ready_word()
+            point_list = point_cal()
+            realword1 = realwords()
+            if realword1 != []:
+                words_found = words_found + realword1
+            else:
+                None
+        output(words_found, point_list)
+    else:
+        word_all = list(word)
+        permus()
+        ready_word1 = ready_word()
+        point_list = point_cal()
+        realword1 = realwords()
+        if realword1 != []:
+            words_found = words_found + realword1
+        else:
+            None
+        output(words_found, point_list)
+#================================end of code===================================
